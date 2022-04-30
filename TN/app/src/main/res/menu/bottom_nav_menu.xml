@@ -14,5 +14,5 @@
         android:id="@+id/navigation_save"
         android:icon="@drawable/ic_save_black_24dp"
         android:title="@string/title_save" />
-    
+
 </menu>
