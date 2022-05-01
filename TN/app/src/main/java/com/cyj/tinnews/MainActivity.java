@@ -1,13 +1,21 @@
 package com.cyj.tinnews;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.cyj.tinnews.model.NewsResponse;
+import com.cyj.tinnews.network.NewsApi;
+import com.cyj.tinnews.network.RetrofitClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +32,24 @@ public class MainActivity extends AppCompatActivity {
         navController = navHostFragment.getNavController();
         NavigationUI.setupWithNavController(navView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController);
+
+        NewsApi api = RetrofitClient.newInstance().create(NewsApi.class);
+        api.getTopHeadlines("US").enqueue(new Callback<NewsResponse>() {
+            @Override
+            public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
+                if (response.isSuccessful()) {
+                    Log.d("getTopHeadlines", response.body().toString());
+                } else {
+                    Log.d("getTopHeadlines", response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NewsResponse> call, Throwable t) {
+                Log.d("getTopHeadlines", t.toString());
+            }
+        });
+
     }
 
     @Override
