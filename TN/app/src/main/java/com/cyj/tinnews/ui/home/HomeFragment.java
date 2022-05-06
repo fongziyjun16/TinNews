@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.cyj.tinnews.R;
+import com.cyj.tinnews.databinding.FragmentHomeBinding;
 import com.cyj.tinnews.repository.NewsRepository;
 import com.cyj.tinnews.repository.NewsViewModelFactory;
 
@@ -19,6 +19,7 @@ import com.cyj.tinnews.repository.NewsViewModelFactory;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel viewModel;
+    private FragmentHomeBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,8 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
