@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.cyj.tinnews.model.Article;
 import com.cyj.tinnews.model.NewsResponse;
 import com.cyj.tinnews.repository.NewsRepository;
 
@@ -25,5 +26,8 @@ public class HomeViewModel extends ViewModel {
         return Transformations.switchMap(countryInput, repository::getTopHeadlines);
     }
 
+    public void setFavoriteArticleInput(Article article) {
+        repository.favoriteArticle(article);
+    }
 
 }

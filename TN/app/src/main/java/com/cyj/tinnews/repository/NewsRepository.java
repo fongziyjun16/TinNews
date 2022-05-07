@@ -1,8 +1,13 @@
 package com.cyj.tinnews.repository;
 
+import android.os.AsyncTask;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.cyj.tinnews.TinNewsApplication;
+import com.cyj.tinnews.database.TinNewsDatabase;
+import com.cyj.tinnews.model.Article;
 import com.cyj.tinnews.model.NewsResponse;
 import com.cyj.tinnews.network.NewsApi;
 import com.cyj.tinnews.network.RetrofitClient;
@@ -14,9 +19,11 @@ import retrofit2.Response;
 public class NewsRepository {
 
     private final NewsApi newsApi;
+    private final TinNewsDatabase database;
 
     public NewsRepository() {
         newsApi = RetrofitClient.newInstance().create(NewsApi.class);
+        database = TinNewsApplication.getDatabase();
     }
 
     public LiveData<NewsResponse> getTopHeadlines(String country) {
@@ -62,5 +69,37 @@ public class NewsRepository {
         return everyThingLiveData;
     }
 
+    public LiveData<Boolean> favoriteArticle(Article article) {
+        MutableLiveData<Boolean> resultLiveData = new MutableLiveData<>();
+        new FavoriteAsyncTask(database, resultLiveData).execute(article);
+        return resultLiveData;
+    }
+
+    private static class FavoriteAsyncTask extends AsyncTask<Article, Void, Boolean> {
+
+        private final TinNewsDatabase database;
+        private final MutableLiveData<Boolean> liveData;
+
+        private FavoriteAsyncTask(TinNewsDatabase database, MutableLiveData<Boolean> liveData) {
+            this.database = database;
+            this.liveData = liveData;
+        }
+
+        @Override
+        protected Boolean doInBackground(Article... articles) {
+            Article article = articles[0];
+            try {
+                database.articleDao().saveArticle(article);
+            } catch (Exception e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            liveData.setValue(success);
+        }
+    }
 
 }

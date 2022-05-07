@@ -1,7 +1,13 @@
 package com.cyj.tinnews.model;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
+@Entity
 public class Article {
 
     public String author;
@@ -9,6 +15,9 @@ public class Article {
     public String description;
     public String publishedAt;
     public String title;
+
+    @NotNull
+    @PrimaryKey
     public String url;
     public String urlToImage;
 
