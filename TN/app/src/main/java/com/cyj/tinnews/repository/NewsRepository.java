@@ -12,6 +12,8 @@ import com.cyj.tinnews.model.NewsResponse;
 import com.cyj.tinnews.network.NewsApi;
 import com.cyj.tinnews.network.RetrofitClient;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -75,9 +77,18 @@ public class NewsRepository {
         return resultLiveData;
     }
 
+    public LiveData<List<Article>> getAllSavedArticles() {
+        return database.articleDao().getAllArticles();
+    }
+
+    public void deleteSavedArticle(Article article) {
+        AsyncTask.execute(() -> database.articleDao().deleteArticle(article));
+    }
+
     private static class FavoriteAsyncTask extends AsyncTask<Article, Void, Boolean> {
 
         private final TinNewsDatabase database;
+
         private final MutableLiveData<Boolean> liveData;
 
         private FavoriteAsyncTask(TinNewsDatabase database, MutableLiveData<Boolean> liveData) {
@@ -95,11 +106,11 @@ public class NewsRepository {
             }
             return true;
         }
-
         @Override
         protected void onPostExecute(Boolean success) {
             liveData.setValue(success);
         }
+
     }
 
 }
