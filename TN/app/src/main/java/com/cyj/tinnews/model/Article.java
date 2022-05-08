@@ -5,10 +5,11 @@ import androidx.room.PrimaryKey;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Article {
+public class Article implements Serializable {
 
     public String author;
     public String content;
